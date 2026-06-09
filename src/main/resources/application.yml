@@ -4,3 +4,7 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId}] [%X{username}] %logger{36} - %msg%n"
