@@ -5,6 +5,8 @@ import com.nzamba.tp_gestion_de_commandes.entity.*;
 import com.nzamba.tp_gestion_de_commandes.exception.EntityNotFoundException;
 import com.nzamba.tp_gestion_de_commandes.exception.StockInsuffisantException;
 import com.nzamba.tp_gestion_de_commandes.repository.*;
+import com.nzamba.tp_gestion_de_commandes.repository.specification.ProduitRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

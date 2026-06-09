@@ -2,11 +2,34 @@ package com.nzamba.tp_gestion_de_commandes.repository;
 
 import com.nzamba.tp_gestion_de_commandes.entity.Commande;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CommandeRepository extends JpaRepository<Commande, Long> {
-    // Permet de récupérer toutes les commandes d'un client spécifique
-    List<Commande> findByClientId(Long clientId);
+
+    // 1. Chiffre d'affaires global (Somme des prix_unitaire * quantite de toutes les lignes)
+    @Query("SELECT SUM(l.prixUnitaire * l.quantite) FROM Commande c JOIN c.lignesCommande l WHERE c.statut != 'CANCELLED'")
+    Double computeTotalChiffreAffaires();
+
+    // 2. Total des dépenses d'un client spécifique
+    @Query("SELECT COALESCE(SUM(l.prixUnitaire * l.quantite), 0.0) FROM Commande c JOIN c.lignesCommande l WHERE c.client.id = :clientId AND c.statut != 'CANCELLED'")
+    Double computeTotalDepensesParClient(@Param("clientId") Long clientId);
+
+    // 3. Top 5 des produits les plus vendus (quantité cumulée)
+    // Retourne une liste de tableaux d'objets [Produit, Long(SommeQuantite)]
+    @Query("SELECT l.produit, SUM(l.quantite) as totalVendu FROM Commande c JOIN c.lignesCommande l " +
+           "WHERE c.statut != 'CANCELLED' GROUP BY l.produit ORDER BY totalVendu DESC")
+    List<Object[]> findTopProduitsRaw();
+
+    // 4. Chiffre d'affaires agrégé par Mois
+    // Note : La fonction FUNCTION('MONTH', ...) s'adapte dynamiquement selon la base (H2, MySQL, PostgreSQL)
+    @Query("SELECT FUNCTION('MONTH', c.date) as mois, FUNCTION('YEAR', c.date) as annee, SUM(l.prixUnitaire * l.quantite) as ca " +
+           "FROM Commande c JOIN c.lignesCommande l WHERE c.statut != 'CANCELLED' " +
+           "GROUP BY FUNCTION('YEAR', c.date), FUNCTION('MONTH', c.date) ORDER BY annee DESC, mois DESC")
+    List<Map<String, Object>> getChiffreAffairesParMois();
 }

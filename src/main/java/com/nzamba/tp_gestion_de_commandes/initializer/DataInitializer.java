@@ -2,6 +2,8 @@ package com.nzamba.tp_gestion_de_commandes.initializer;
 
 import com.nzamba.tp_gestion_de_commandes.entity.*;
 import com.nzamba.tp_gestion_de_commandes.repository.*;// Ajustez selon vos repositories
+import com.nzamba.tp_gestion_de_commandes.repository.specification.ProduitRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

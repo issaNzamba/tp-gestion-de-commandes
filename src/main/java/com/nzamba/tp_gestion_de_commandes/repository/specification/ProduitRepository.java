@@ -1,4 +1,4 @@
-package com.nzamba.tp_gestion_de_commandes.repository;
+package com.nzamba.tp_gestion_de_commandes.repository.specification;
 
 import com.nzamba.tp_gestion_de_commandes.entity.Produit;
 import org.springframework.data.jpa.repository.JpaRepository;
