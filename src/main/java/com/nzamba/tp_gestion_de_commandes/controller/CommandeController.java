@@ -23,7 +23,7 @@ public class CommandeController {
      * Un utilisateur connecté (client ou admin) peut passer une commande
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')") // Remplacé hasAnyRole par hasAnyAuthority
     public ResponseEntity<CommandeResponse> creer(@Valid @RequestBody CommandeRequest request) {
         CommandeResponse response = commandeService.creerCommande(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -33,7 +33,7 @@ public class CommandeController {
      * Un utilisateur ou un admin peut voir le détail d'une commande précise
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')") // Remplacé hasAnyRole par hasAnyAuthority
     public ResponseEntity<CommandeResponse> obtenir(@PathVariable Long id) {
         return ResponseEntity.ok(commandeService.getById(id));
     }
@@ -42,7 +42,7 @@ public class CommandeController {
      * SEUL l'administrateur a le droit de lister toutes les commandes de la boutique
      */
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')") // Remplacé hasRole par hasAuthority
     public ResponseEntity<List<CommandeResponse>> listerTout() {
         return ResponseEntity.ok(commandeService.getAllCommandes());
     }

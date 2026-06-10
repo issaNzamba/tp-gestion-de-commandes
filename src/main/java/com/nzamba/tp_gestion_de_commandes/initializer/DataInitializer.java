@@ -1,8 +1,7 @@
 package com.nzamba.tp_gestion_de_commandes.initializer;
 
 import com.nzamba.tp_gestion_de_commandes.entity.*;
-import com.nzamba.tp_gestion_de_commandes.repository.*;// Ajustez selon vos repositories
-import com.nzamba.tp_gestion_de_commandes.repository.specification.ProduitRepository;
+import com.nzamba.tp_gestion_de_commandes.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     private final ProduitRepository produitRepository;
     private final ClientRepository clientRepository;
     private final CommandeRepository commandeRepository;
-    private final PasswordEncoder passwordEncoder; // Essentiel pour que l'authentification fonctionne !
+    private final PasswordEncoder passwordEncoder; // Essentiel pour le hachage des mots de passe
 
     @Override
     public void run(String... args) throws Exception {
@@ -36,22 +35,26 @@ public class DataInitializer implements CommandLineRunner {
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole("ADMIN");
+            utilisateurRepository.save(admin);
 
             Utilisateur userNzamba = new Utilisateur();
             userNzamba.setUsername("nzamba");
             userNzamba.setPassword(passwordEncoder.encode("password123"));
             userNzamba.setRole("USER");
-
-            utilisateurRepository.saveAll(List.of(admin, userNzamba));
+            
+            // On sauvegarde individuellement et on écrase la variable locale 
+            // avec l'instance contenant l'ID généré par la base de données
+            userNzamba = utilisateurRepository.save(userNzamba);
             log.info("  ✓ Utilisateurs créés (admin / admin123) et (nzamba / password123)");
             
             // 2. Initialisation du Client lié à l'utilisateur métier
             Client client = new Client();
             client.setNom("Nzamba Dev");
             client.setEmail("nzamba@example.com");
-            client.setUtilisateur(userNzamba);
+            client.setUtilisateur(userNzamba); // Utilise l'instance managée saine
+            
             clientRepository.save(client);
-            log.info("  ✓ Profil Client rattaché créé pour 'nzamba'");
+            log.info("  ✓ Profil Client rattaché créé pour 'nzamba'");    
         }
 
         // 3. Initialisation des Produits
@@ -82,11 +85,8 @@ public class DataInitializer implements CommandLineRunner {
             Commande commande = new Commande();
             commande.setClient(client);
             commande.setDate(LocalDateTime.now());
-            commande.setStatut(StatutCommande.CREATED); // S'assurer que l'enum possède bien CREATED
+            commande.setStatut(StatutCommande.CREATED);
 
-            // Note : Si vous gérez les lignes de commandes en cascade (CascadeType.ALL), 
-            // vous pouvez les ajouter ici. Sinon, la commande brute suffit pour les tests de routes.
-            
             commandeRepository.save(commande);
             log.info("  ✓ Une commande de test créée pour le client : {}", client.getNom());
         }

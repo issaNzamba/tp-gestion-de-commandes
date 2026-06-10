@@ -1,13 +1,11 @@
 package com.nzamba.tp_gestion_de_commandes.entity;
 
-// ❌ SUPPRIMEZ l'import de security.Utilisateur qui s'y trouvait
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -25,6 +23,8 @@ public class Client {
     private String nom;
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Utilisateur utilisateur; // Utilise maintenant l'entité du package entity !
+    // Correction ici : suppression du cascade = CascadeType.ALL pour éviter le conflit de persistance
+    @OneToOne
+    @JoinColumn(name = "utilisateur_id") // Optionnel mais recommandé pour nommer proprement votre clé étrangère
+    private Utilisateur utilisateur; 
 }
