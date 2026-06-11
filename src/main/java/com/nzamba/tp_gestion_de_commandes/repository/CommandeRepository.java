@@ -4,12 +4,10 @@ import com.nzamba.tp_gestion_de_commandes.entity.Commande;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository
 public interface CommandeRepository extends JpaRepository<Commande, Long> {
 
     // 1. Chiffre d'affaires global (Utilisation de c.lignes selon votre entité)
