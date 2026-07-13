@@ -1,8 +1,3 @@
-Voici un modèle de fichier **`README.md`** complet, propre et prêt à l'emploi. Il est structuré pour être immédiatement lisible sur GitHub ou GitLab afin de documenter parfaitement votre projet.
-
-Vous pouvez créer un fichier nommé `README.md` à la racine de votre projet (à côté du `pom.xml`) et y coller le contenu suivant :
-
----
 
 ```markdown
 # TP Gestion de Commandes 🚀
